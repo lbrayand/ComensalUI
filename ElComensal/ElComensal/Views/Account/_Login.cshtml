@@ -1,0 +1,35 @@
+﻿<div class="modal-dialog">
+    <div class="modal-content">
+        <form role="form" method="post" name="form1">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <i class="icon-reading icon-2x text-slate-300 border-slate-300 border-3 rounded-round p-3 mb-3 mt-1"></i>
+                        <h5 class="mb-0"></h5>
+                        <span class="d-block text-muted">Ingrese con su cuenta de red Ej. VDELACRUZ</span>
+                    </div>
+
+                    <div class="form-group form-group-feedback form-group-feedback-left">
+                        <input type="text" class="form-control" name="username" placeholder="Username" required>
+                        @*@Html.TextBoxFor(i => i.userName, new { @placeholder = "Usuario", @class = "form-control", @required = "required" })*@
+                        <div class="form-control-feedback">
+                            @*<i class="icon-user text-muted"></i>*@
+                        </div>
+                    </div>
+
+                    <div class="form-group form-group-feedback form-group-feedback-left">
+                        @*@Html.PasswordFor(i => i.password, new { @placeholder = "Contraseña", @class = "form-control", @required = "required" })*@
+                        <input type="password" class="form-control" name="password" placeholder="Password" required>
+                        <div class="form-control-feedback">
+                            @*<i class="icon-lock2 text-muted"></i>*@
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

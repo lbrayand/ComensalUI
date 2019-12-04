@@ -1,0 +1,147 @@
+﻿
+@{
+    ViewBag.Title = "Registro Clientes";
+    Layout = "~/Views/Shared/_LayoutRegistro.cshtml";
+}
+
+<div class="container">
+    </br>
+    <div class="text-center">
+        <h3>Registro de Cliente</h3>
+    </div>
+    <form id="formRegCliente">
+        <div class="row">
+            <div class="row col-md-6">
+                <fieldset>
+                    <div class="row">
+                        <div class="col-md-offset-6">
+                            <div class="form-group">
+                                <label>Tipo Documento:</label>
+                                <select id="ddlTipoDocumento" class="form-control">
+                                    <option value="0" selected="selected">Seleccione</option>
+                                    <option value="dni">DNI</option>
+                                    <option value="dni">C.E.</option>
+                                    <option value="dni">RUC</option>
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="col-md-offset-6">
+                            <div class="form-group">
+                                <label for="txtNombre">Nombres:</label>
+                                <input type="text" class="form-control" id="txtNombres" />
+                            </div>
+                        </div>
+                        <div class="col-md-offset-6">
+                            <div class="form-group">
+                                <label for="txtEmail">Email:</label>
+                                <input type="text" class="form-control" id="txtEmail" />
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="row col-md-6">
+                <fieldset>
+                    <div class="row">
+                        <div class="col-md-offset-1">
+                            <div class="form-group">
+                                <label for="txtNumDoc">Documento:</label>
+                                <input type="text" class="form-control" id="txtNumDoc" />
+                            </div>
+                        </div>
+                        <div class="col-md-offset-1">
+                            <div class="form-group">
+                                <label for="txtApellidos">Apellidos:</label>
+                                <input type="text" class="form-control" id="txtApellidos" />
+                            </div>
+                        </div>
+                        <div class="col-md-offset-1">
+                            <div class="form-group">
+                                <label for="txtCelular">Celular:</label>
+                                <input type="text" class="form-control" id="txtCelular" />
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="text-center">
+                <a class="btn btn-primary" style="color:white" onclick="grabarCliente();">Guardar <i class="fa fa-save mr-2"></i></a>
+                <a class="btn btn-danger" style="color:white">Cancelar <i class="fa fa-save mr-2"></i></a>
+            </div>
+            @Html.Hidden("RedirectTo", Url.Action("Index", "Reserva"));
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    function validar() {
+        if ($("#ddlTipoDocumento").val() == "0")
+        {
+            swal({
+                title: 'Seleccione Tipo de documento',
+                text: err.statusText,
+                type: 'error',
+                icon: 'error'
+            });
+        }
+    }
+
+    function grabarCliente() {
+        var _nombres = $("#txtNombres").val();
+        var _apellidos = $("#txtApellidos").val();
+        var _tipoDocumento = $("#ddlTipoDocumento").val();
+        var _numDoc = $("#txtNumDoc").val();
+        var _sexo = "M";
+        var _email = $("#txtEmail").val();
+        var _celular = $("#txtCelular").val();
+        var _tipoUsuario = "C";
+
+        var dataGrabar = {
+            nombres: _nombres,
+            apellidos: _apellidos,
+            tipoDocumento: _tipoDocumento,
+            dni: _numDoc,
+            sexo: _sexo,
+            email: _email,
+            celular: _celular,
+            tipoUsuario: _tipoUsuario
+        };
+
+        $.ajax({
+        url: '@Url.Action("GrabarCliente", "Registro")',
+        type: "POST",
+        datatype: "json",
+        data: JSON.stringify(dataGrabar),
+        contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                if (data.Result == "OK") {
+                    swal({
+                        title: 'Correcto',
+                        text: data.Message,
+                        icon: 'success',
+                        buttons: ["OK"]
+                    });
+                    var url = $("#RedirectTo").val();
+                    setTimeout(function () { location.href = url}, 5000);
+                }
+                else if(data.Result == "NO")
+                {
+                    swal({
+                        title: 'Error',
+                        text: data.Message,
+                        type: 'error',
+                        icon: 'error'
+                    });
+                }
+            },
+            error: function (data) {
+                swal({
+                    title: 'Ocurrió un error',
+                    text: data.Message,
+                    type: 'error',
+                    icon: 'error'
+                });
+            }
+    });
+}
+</script>

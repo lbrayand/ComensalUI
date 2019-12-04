@@ -1,0 +1,129 @@
+﻿@{
+    ViewBag.Title = "Reserva de Cliente";
+    Layout = "~/Views/Shared/_LayoutRegistro.cshtml";
+}
+
+<div class="container">
+    </br>
+    <div class="text-center">
+        <h3>Generar Reserva</h3>
+    </div>
+    <form id="formRegCliente">
+        <div class="row">
+            <div class="row col-md-6">
+                <fieldset>
+                    <div class="row">
+                        <div class="col-md-offset-6">
+                            <div class="form-group">
+                                <label>Seleccione Local:</label>
+                                @Html.DropDownList("ddlLocal", (SelectList)ViewData["locales"], new { @class = "form-control form-control-chosen-required" })
+                            </div>
+                        </div>
+                        <div class="col-md-offset-6">
+                            <div class="form-group">
+                                <label for="dtFechaReserva">Fecha:</label>
+                                <input type="date" class="form-control" id="dtFechaReserva" />
+                            </div>
+                        </div>
+                        <div class="col-md-offset-6">
+                            <div class="form-group">
+                                <label for="txtnumPersonas">Número de Personas:</label>
+                                <input type="text" class="form-control" id="txtnumPersonas" />
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="row col-md-6">
+                <fieldset>
+                    <div class="row">
+                        <div class="col-md-offset-1">
+                            <div class="form-group">
+                                <label for="txtNombre">Seleccione Motivo:</label>
+                                @Html.DropDownList("ddlMotivo", (SelectList)ViewData["motivos"], new { @class = "form-control form-control-chosen-required" })
+                            </div>
+                        </div>
+                        <div class="col-md-offset-1">
+                            <div class="form-group">
+                                <label for="dtFechaReserva">Hora:</label>
+                                <input type="time" class="form-control" id="dtHoraReserva" />
+                            </div>
+                        </div>
+                        <div class="col-md-offset-1">
+                            <div class="form-group">
+                                <label for="txtComentario">Comentario:</label>
+                                <input type="text" class="form-control" id="txtComentario"/>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="text-center">
+                <a class="btn btn-primary" style="color:white" onclick="grabarReserva();">Guardar <i class="fa fa-save mr-2"></i></a>
+                <a class="btn btn-danger" style="color:white">Cancelar <i class="fa fa-save mr-2"></i></a>
+            </div>
+            @Html.Hidden("RedirectTo", Url.Action("Index", "Home"));
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+   
+
+    function grabarReserva() {
+        var _idLocal = $("#ddlLocal").val();
+        var _idMotivo = $("#ddlMotivo").val();
+        var _estadoReserva = "1";
+        var _fechaReserva = $("#dtFechaReserva").val();
+        var _horaReserva = $("#dtHoraReserva").val();
+        var _numPersonas = $("#txtnumPersonas").val();
+
+        var dataGrabar = {
+            idLocal: _idLocal,
+            idMotivo: _idMotivo,
+            estadoReserva: _estadoReserva,
+            fechaReserva: _fechaReserva,
+            horaReserva: _horaReserva,
+            numPersonas: _numPersonas
+        };
+
+        $.ajax({
+        url: '@Url.Action("GrabarReserva", "Reserva")',
+        type: "POST",
+        datatype: "json",
+        data: JSON.stringify(dataGrabar),
+        contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                if (data.Result == "OK") {
+                    swal({
+                        title: 'Correcto',
+                        text: data.Message,
+                        icon: 'success',
+                        buttons: ["OK"]
+                    });
+                    var url = $("#RedirectTo").val();
+                    setTimeout(function () { location.href = url}, 5000);
+                }
+                else if(data.Result == "NO")
+                {
+                    swal({
+                        title: 'Error',
+                        text: data.Message,
+                        type: 'error',
+                        icon: 'error'
+                    });
+                }
+            },
+            error: function (data) {
+                swal({
+                    title: 'Ocurrió un error',
+                    text: data.Message,
+                    type: 'error',
+                    icon: 'error'
+                });
+            }
+    });
+
+    }
+
+
+</script>
